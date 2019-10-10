@@ -3,7 +3,7 @@
         <div class="col">
             <h4>{{title}}</h4>
             <p>
-                {{data | json}}
+                {{data$ |async | json}}
             </p>
         </div>
     </div>

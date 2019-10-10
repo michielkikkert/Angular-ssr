@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { TestService } from './test.service';
+import { select, Store } from '@ngrx/store';
+import * as testActions from './store';
+import { Observable } from 'rxjs';
+
 
 @Component({
     selector: 'app-root',
@@ -8,25 +11,15 @@ import { TestService } from './test.service';
 })
 export class AppComponent implements OnInit{
     title = 'ssr';
-    data: any;
+    data$: Observable<any> = this.store.pipe( select(testActions.getTestData) );
 
     constructor(
-        private testservice: TestService
+        private store: Store<any>
     ) {}
 
     ngOnInit(): void {
 
-        this.testservice.getData().subscribe( data => {
-            this.data = data;
-        });
-
+        this.store.dispatch(testActions.loadData());
 
     }
-
-    getTitle(index) {
-        console.log('Jow!');
-        return 'Bla ' + index;
-    }
-
-
 }

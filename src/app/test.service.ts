@@ -1,11 +1,10 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MIKE_KEY } from './app.module';
 import { isPlatformBrowser } from '@angular/common';
 import { TransferState } from '@angular/platform-browser';
-import { from, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
-
+import { STORE_KEY } from './serverstate/state.key';
 
 @Injectable({
   providedIn: 'root'
@@ -20,13 +19,17 @@ export class TestService {
 
 
   getData(): Observable<any> {
-      if (isPlatformBrowser(this.platformKey)){
-          console.log(this.transferState.get(MIKE_KEY, null));
-          return of(this.transferState.get(MIKE_KEY, null));
+      if (isPlatformBrowser(this.platformKey) && this.transferState.hasKey(STORE_KEY)){
+          return of(this.transferState.get(STORE_KEY, null));
       } else {
           return this.http.get('https://customer.cloudworkers.dev').pipe(
-              tap( data => this.transferState.set(MIKE_KEY, data)),
-              tap( console.log )
+              tap( data => {
+                  if(isPlatformBrowser((this.platformKey))){
+                      console.log('Call Made on browser', data )
+                  } else {
+                      console.log('Call Made on server', data )
+                  }
+              })
           );
       }
   }

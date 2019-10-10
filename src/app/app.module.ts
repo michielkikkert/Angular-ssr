@@ -5,22 +5,35 @@ import { BrowserTransferStateModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects'
+import { effects, reducers } from './store';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { environment } from '../environments/environment';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
-export const MIKE_KEY = makeStateKey<any>('MIKE_KEY');
 
 @NgModule({
     declarations: [
         AppComponent
     ],
     imports: [
-        BrowserModule.withServerTransition({appId: 'serverApp'}),
+        BrowserModule.withServerTransition({appId: 'serverapp'}),
         AppRoutingModule,
         HttpClientModule,
-        BrowserTransferStateModule
-    ],
-    providers: [
+        BrowserTransferStateModule,
+        StoreModule.forRoot(reducers, {
+            runtimeChecks: {
+                strictStateImmutability: true,
+                strictActionImmutability: true
+            }
+        }),
+        StoreRouterConnectingModule.forRoot({stateKey: 'router'}),
+        EffectsModule.forRoot(effects),
+        environment.production ? StoreDevtoolsModule.instrument() : StoreDevtoolsModule.instrument()
 
     ],
+    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {
