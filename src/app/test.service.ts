@@ -22,15 +22,7 @@ export class TestService {
       if (isPlatformBrowser(this.platformKey) && this.transferState.hasKey(STORE_KEY)){
           return of(this.transferState.get(STORE_KEY, null));
       } else {
-          return this.http.get('https://customer.cloudworkers.dev').pipe(
-              tap( data => {
-                  if(isPlatformBrowser((this.platformKey))){
-                      console.log('Call Made on browser', data )
-                  } else {
-                      console.log('Call Made on server', data )
-                  }
-              })
-          );
+          return this.http.get('https://customer.cloudworkers.dev');
       }
   }
 

@@ -9,6 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "ssr": "npm run build:ssr && npm run serve:ssr",
+    "static": "npm run build:ssr && PRERENDER=1 npm run serve:ssr",
     "compile:server": "webpack --config webpack.server.config.js --progress --colors",
     "serve:ssr": "node dist/server",
     "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",

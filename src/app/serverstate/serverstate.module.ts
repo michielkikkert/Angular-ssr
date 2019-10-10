@@ -16,11 +16,8 @@ import * as testActions from '../store';
 export class ServerstateModule {
 
     constructor(private transferState: TransferState, private store: Store<any>) {
-
         this.store.pipe( select( testActions.getTestData ) ).subscribe( data => {
-            console.log('ServerstateModule', {data});
             this.transferState.set( STORE_KEY, data);
         })
-
     }
 }

@@ -19,6 +19,7 @@ import 'zone.js/dist/zone-node';
 
 import * as express from 'express';
 import {join} from 'path';
+import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, readdirSync } from 'fs';
 
 // Express server
 const app = express();
@@ -26,8 +27,11 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const DIST_FOLDER = join(process.cwd(), 'dist/browser');
 
+// index.html template
+const template = readFileSync(join(DIST_FOLDER, 'index.html')).toString();
+
 // * NOTE :: leave this as require() since this file is built Dynamically from webpack
-const {AppServerModuleNgFactory, LAZY_MODULE_MAP, ngExpressEngine, provideModuleMap} = require('./dist/server/main');
+const {AppServerModuleNgFactory, LAZY_MODULE_MAP, ngExpressEngine, provideModuleMap, renderModuleFactory} = require('./dist/server/main');
 
 // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
 app.engine('html', ngExpressEngine({
@@ -52,7 +56,48 @@ app.get('*', (req, res) => {
   res.render('index', { req });
 });
 
-// Start up the Node server
-app.listen(PORT, () => {
-  console.log(`Node Express server listening on http://localhost:${PORT}`);
-});
+console.log('HERE!', process.env.PRERENDER);
+
+if (process.env.PRERENDER) {
+
+    const routes = require('./prerender.routes.js').prerenderRoutes;
+    Promise.all(
+        routes.map(route =>
+            renderModuleFactory(AppServerModuleNgFactory, {
+                document: template,
+                url: route,
+                extraProviders: [
+                    provideModuleMap(LAZY_MODULE_MAP)
+                ]
+            }).then(html => [route, html])
+        )
+    ).then(results => {
+        results.forEach(([route, html]) => {
+            const fullPath = join('./dist/static', route);
+            if (!existsSync(fullPath)) { mkdirSync(fullPath) }
+            writeFileSync(join(fullPath, 'index.html'), html);
+        });
+        // copy the other resources
+        const files = readdirSync('./dist/browser');
+
+        files.forEach( file => {
+            if(file.endsWith('.js') || file.endsWith('.css')) {
+                console.log(file);
+            }
+        });
+        process.exit();
+    });
+
+} else if (!process.env.FUNCTION_NAME) {
+
+    app.listen(PORT, () => {
+        console.log(`Node Express server listening on http://localhost:${PORT}`);
+    });
+
+}
+
+
+// // Start up the Node server
+// app.listen(PORT, () => {
+//   console.log(`Node Express server listening on http://localhost:${PORT}`);
+// });
