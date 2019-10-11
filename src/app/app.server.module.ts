@@ -6,15 +6,12 @@ import { AppModule } from './app.module';
 import { AppComponent } from './app.component';
 import { ModuleMapLoaderModule } from '@nguniversal/module-map-ngfactory-loader';
 
-import { ServerstateModule } from './serverstate/serverstate.module';
-
 @NgModule({
     imports: [
         AppModule,
         ServerModule,
         ModuleMapLoaderModule,
-        ServerTransferStateModule,
-        ServerstateModule
+        ServerTransferStateModule
     ],
     bootstrap: [AppComponent],
 })
