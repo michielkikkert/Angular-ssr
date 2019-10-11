@@ -10,5 +10,10 @@ export const getTestState = createSelector(
 
 export const getTestData = createSelector(
     getTestState,
-    (state) => state && state.test
+    (state) => state && state.data
+);
+
+export const getMoreTestData = createSelector(
+    getTestState,
+    (state) => state && state.moredata
 );

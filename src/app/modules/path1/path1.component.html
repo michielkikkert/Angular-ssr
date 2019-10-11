@@ -1,6 +1,11 @@
 <p>path1 works!</p>
 
 <pre>{{ data$ | async | json }}</pre>
+<br/>
+<pre>{{ moredata$ | async | json }}</pre>
 
 <button [routerLink]="['']">Home</button>
 <button [routerLink]="['/path2']">Path 2</button>
+<br/>
+<br/>
+<button (click)="again()">Refresh</button>

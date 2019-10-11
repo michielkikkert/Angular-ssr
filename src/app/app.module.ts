@@ -2,6 +2,7 @@ import { BrowserModule, makeStateKey } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserTransferStateModule } from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,7 +21,7 @@ import { HomeModule } from './modules/home/home.module';
         AppComponent
     ],
     imports: [
-        BrowserModule.withServerTransition({appId: 'serverapp'}),
+        BrowserModule.withServerTransition({appId: 'serverApp'}),
         AppRoutingModule,
         HttpClientModule,
         BrowserTransferStateModule,
@@ -36,7 +37,7 @@ import { HomeModule } from './modules/home/home.module';
         environment.production ? StoreDevtoolsModule.instrument() : StoreDevtoolsModule.instrument()
 
     ],
-    providers: [],
+    providers: [Title],
     bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -10,13 +10,25 @@ import { TestService } from '../test.service';
 export class TestEffects {
     constructor(private actions$: Actions, private store: Store<any>, private service: TestService) {}
 
-    gaugeData$ = createEffect(() =>
+    getData$ = createEffect(() =>
         this.actions$.pipe(
             ofType(testActions.loadData),
             switchMap(() => {
                 return this.service.getData().pipe(
                     map((response: any[]) => testActions.loadDataSuccess({ response })),
                     catchError(error => of(testActions.loadDataFail({ error })))
+                );
+            })
+        )
+    );
+
+    getMoreData$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(testActions.loadMoreData),
+            switchMap(() => {
+                return this.service.getOtherData().pipe(
+                    map((response: any[]) => testActions.loadMoreDataSuccess({ response })),
+                    catchError(error => of(testActions.loadMoreDataFail({ error })))
                 );
             })
         )

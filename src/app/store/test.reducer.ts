@@ -2,11 +2,13 @@ import { Action, createReducer, on } from '@ngrx/store';
 import * as testActions from './test.actions';
 
 export interface TestState {
-    test: string;
+    data: any;
+    moredata: any
 }
 
 export const initialState: TestState = {
-    test: 'initial state'
+    data: 'initial state for data',
+    moredata: 'initial state for more data'
 };
 
 
@@ -17,7 +19,16 @@ const testReducer = createReducer(
         (state, {response}) => {
             return {
                 ...state,
-                test: response
+                data: response
+            }
+        }
+    ),
+    on(
+        testActions.loadMoreDataSuccess,
+        (state, {response}) => {
+            return {
+                ...state,
+                moredata: response
             }
         }
     )
