@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import * as testActions from './store';
-import { Observable } from 'rxjs';
+
 
 
 @Component({
@@ -11,7 +11,6 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent implements OnInit{
     title = 'ssr';
-    data$: Observable<any> = this.store.pipe( select(testActions.getTestData) );
 
     constructor(
         private store: Store<any>

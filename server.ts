@@ -26,6 +26,7 @@ const app = express();
 
 const PORT = process.env.PORT || 4000;
 const DIST_FOLDER = join(process.cwd(), 'dist/browser');
+const STATIC_FOLDER = join(process.cwd(), 'dist/static');
 
 // index.html template
 const template = readFileSync(join(DIST_FOLDER, 'index.html')).toString();
@@ -56,8 +57,6 @@ app.get('*', (req, res) => {
   res.render('index', { req });
 });
 
-console.log('HERE!', process.env.PRERENDER);
-
 if (process.env.PRERENDER) {
 
     const routes = require('./prerender.routes.js').prerenderRoutes;
@@ -73,16 +72,20 @@ if (process.env.PRERENDER) {
         )
     ).then(results => {
         results.forEach(([route, html]) => {
-            const fullPath = join('./dist/static', route);
+            const fullPath = join(STATIC_FOLDER, route);
             if (!existsSync(fullPath)) { mkdirSync(fullPath) }
+            console.log('Writing file:', route );
             writeFileSync(join(fullPath, 'index.html'), html);
         });
         // copy the other resources
-        const files = readdirSync('./dist/browser');
+        const files = readdirSync(DIST_FOLDER);
 
         files.forEach( file => {
-            if(file.endsWith('.js') || file.endsWith('.css')) {
-                console.log(file);
+            if(file !== 'index.html') {
+                const source = join(DIST_FOLDER, file);
+                const dest = join(STATIC_FOLDER, file);
+                console.log('Copying', source, dest);
+                copyFileSync(source, dest);
             }
         });
         process.exit();

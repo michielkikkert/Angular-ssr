@@ -11,6 +11,8 @@ import { effects, reducers } from './store';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { HomeModule } from './modules/home/home.module';
+
 
 
 @NgModule({
@@ -22,6 +24,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
         AppRoutingModule,
         HttpClientModule,
         BrowserTransferStateModule,
+        HomeModule,
         StoreModule.forRoot(reducers, {
             runtimeChecks: {
                 strictStateImmutability: true,
