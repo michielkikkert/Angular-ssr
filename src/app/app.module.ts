@@ -1,8 +1,9 @@
-import { BrowserModule, makeStateKey } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserTransferStateModule } from '@angular/platform-browser';
 import { Title } from '@angular/platform-browser';
+import { TransferHttpCacheModule } from '@nguniversal/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,6 +23,7 @@ import { HomeModule } from './modules/home/home.module';
     ],
     imports: [
         BrowserModule.withServerTransition({appId: 'serverApp'}),
+        TransferHttpCacheModule,
         AppRoutingModule,
         HttpClientModule,
         BrowserTransferStateModule,
